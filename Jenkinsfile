@@ -3,7 +3,7 @@ pipeline {
   agent { label 'Linux-server'}
 
   environment {
-   DOCKERHUB_CREDENTIALS=credentials('dockerhub-devopseje')
+   DOCKERHUB_CREDENTIALS=credentials('dockerhub')
   }
 
   stages {

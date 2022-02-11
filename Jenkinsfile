@@ -41,8 +41,8 @@ pipeline {
 
      stage('Deploing App to Kubernetes'){
         steps {
-         withAWS(credentials: 'aws-cred', region: 'eu-central-1') {
           script {
+          withAWS(credentials: 'aws-cred', region: 'eu-central-1') {
             kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
           }
           }

@@ -42,7 +42,8 @@ pipeline {
         steps {
           script {
           withAWS(credentials: 'aws-cred', region: 'eu-central-1') {
-            kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
+           sh '/usr/local/bin/kubectl apply -f deploymentservice.yml'
+          // kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
           }
           }
         }

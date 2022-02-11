@@ -4,7 +4,8 @@ pipeline {
 
   environment {
    DOCKERHUB_CREDENTIALS=credentials('dockerhub')
-
+   dockerimagename = "devopseje/nodeapp"
+   dockerImage = ""
   }
 
   stages {
@@ -18,20 +19,31 @@ pipeline {
 
      stage('Build'){
         steps {
-         sh 'docker build -t devopseje/nodeapp_test:latest .'
+          script {
+          dockerImage = docker.build dockerimagename
+          }
         }
      }
 
-     stage('Login into Docker'){
-        steps{
-           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-        }
-     }
-
-     stage('Docker Push into Docker-Hub'){
-       steps{
-        sh 'docker push devopseje/nodeapp_test:latest'
+     stage('Pushing the image into Dockerhub'){
+       environment {
+        registryCredentials = 'dockerhub'
        }
+       steps{
+         script {
+          docker.withRegistry('https://registry.hub.docker.com', registryCredentials){
+           dockerImage.push("latest")
+          }
+         }
+       }
+     }
+
+     stage('Deploing App to Kubernetes'){
+        steps {
+          script {
+            kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigID: "kubernetes")
+          }
+        }
      }
 
      stage('Remove unused image'){

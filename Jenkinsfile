@@ -38,7 +38,6 @@ pipeline {
        }
      }
 
-
      stage('Deploing App to Kubernetes'){
         steps {
           script {
